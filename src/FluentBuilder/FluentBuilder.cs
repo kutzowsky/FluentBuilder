@@ -23,27 +23,52 @@ namespace FluentBuilder
 
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
+            var methodName = binder.Name;
+            CheckPrefixOf(methodName);
+
+            var propertyName = RemovePrefixFrom(methodName);
+            var property = FindPropertyWith(propertyName);
+
+            var value = GetValueToSetFrom(args);
+            CheckArgumentType(value, property);
+
+            property.SetValue(builtObject, value);
+            
             result = this;
+            return true;
+        }
 
-            if (!binder.Name.StartsWith("With")) throw new InvalidMethodPrefixException();
+        private void CheckPrefixOf(string methodName)
+        {
+            if (!methodName.StartsWith("With")) throw new InvalidMethodPrefixException();
+        }
 
-            var propertyName = binder.Name.Remove(0, 4);
+        private string RemovePrefixFrom(string methodName)
+        {
+            return methodName.Remove(0, 4);
+        }
 
+        private PropertyInfo FindPropertyWith(string propertyName)
+        {
             var property = builtObjectProperties.FirstOrDefault(prop => prop.Name == propertyName);
-
             if (property == null) throw new NoSuchPropertyException(propertyName);
 
+            return property;
+        }
+
+        private object GetValueToSetFrom(object[] args)
+        {
             if (args.Count() != 1) throw new InvalidArgumentNumberException();
 
-            var value = args.First();
+            return args.First();
+        }
+
+        private void CheckArgumentType(object value, PropertyInfo property)
+        {
             var valueType = value.GetType();
             var propertyType = property.PropertyType;
 
             if (!valueType.IsAssignableFrom(propertyType)) throw new InvalidArgumentTypeException();
-
-            property.SetValue(builtObject, value);
-            
-            return true;
         }
     }
 }
