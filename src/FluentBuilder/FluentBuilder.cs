@@ -39,8 +39,9 @@ namespace FluentBuilder
             var propertyType = property.PropertyType;
 
             if (!valueType.IsAssignableFrom(propertyType)) return false;
-            
 
+            property.SetValue(builtObject, value);
+            
             return true;
         }
     }

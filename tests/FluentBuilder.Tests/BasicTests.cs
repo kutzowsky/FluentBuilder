@@ -92,5 +92,19 @@ namespace FluentBuilder.Tests
                 builder.WithSomeNumber("String instead of number");
             });
         }
+
+        [Fact]
+        public void BuildMethods_ShouldSet_CorrectPropetyValuesInTheSourceObject()
+        {
+            const int expectedNumber = 42;
+            const string expectedString = "I'm just a poor string, I need no sympathy.";
+
+            dynamic builder = new FluentBuilder<SomeClass>();
+            builder.WithSomeNumber(expectedNumber).WithSomeString(expectedString);
+            SomeClass someClassInstance = builder.Get();
+
+            someClassInstance.SomeNumber.ShouldBe(expectedNumber);
+            someClassInstance.SomeString.ShouldBe(expectedString);
+        }
     }
 }
