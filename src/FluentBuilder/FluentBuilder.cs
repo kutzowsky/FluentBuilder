@@ -1,4 +1,5 @@
-﻿using System.Dynamic;
+﻿using FluentBuilder.Exceptions;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 
@@ -24,21 +25,21 @@ namespace FluentBuilder
         {
             result = this;
 
-            if (!binder.Name.StartsWith("With")) return false;
+            if (!binder.Name.StartsWith("With")) throw new InvalidMethodPrefixException();
 
             var propertyName = binder.Name.Remove(0, 4);
 
             var property = builtObjectProperties.FirstOrDefault(prop => prop.Name == propertyName);
 
-            if (property == null) return false;
+            if (property == null) throw new NoSuchPropertyException(propertyName);
 
-            if (args.Count() != 1) return false;
+            if (args.Count() != 1) throw new InvalidArgumentNumberException();
 
             var value = args.First();
             var valueType = value.GetType();
             var propertyType = property.PropertyType;
 
-            if (!valueType.IsAssignableFrom(propertyType)) return false;
+            if (!valueType.IsAssignableFrom(propertyType)) throw new InvalidArgumentTypeException();
 
             property.SetValue(builtObject, value);
             

@@ -1,4 +1,4 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
+﻿using FluentBuilder.Exceptions;
 using Shouldly;
 using Xunit;
 
@@ -30,7 +30,7 @@ namespace FluentBuilder.Tests
             Should.NotThrow(() =>
             {
                 builder.WithSomeNumber(1);
-                builder.WithSomeString("Hello I'm a string");
+                builder.WithSomeString("Is this the real life ?");
             });
         }
 
@@ -39,11 +39,20 @@ namespace FluentBuilder.Tests
         {
             dynamic builder = new FluentBuilder<SomeClass>();
 
-            //TODO: custom exception
-            Should.Throw<RuntimeBinderException>(() =>
+            Should.Throw<NoSuchPropertyException>(() =>
             {
-                builder.SomeNumber(1);
-                builder.SomeStrangemethod("???");
+                builder.WithSomeOtherProperty("Is this just fantasy?");
+            });
+        }
+
+        [Fact]
+        public void Builder_ShouldThrow_OnMethodsWithoutValidPrefix()
+        {
+            dynamic builder = new FluentBuilder<SomeClass>();
+
+            Should.Throw<InvalidMethodPrefixException>(() =>
+            {
+                builder.MethodWithoutPrefix("Caught in a landslide");
             });
         }
 
@@ -58,24 +67,24 @@ namespace FluentBuilder.Tests
         }
 
         [Fact]
-        public void BuildMethods_ShouldThrow_When_NoParametersPassed()
+        public void BuildMethods_ShouldThrow_When_NoArgumentsPassed()
         {
             dynamic builder = new FluentBuilder<SomeClass>();
 
             //TODO: custom exception
-            Should.Throw<RuntimeBinderException>(() =>
+            Should.Throw<InvalidArgumentNumberException>(() =>
             {
                 builder.WithSomeNumber();
             });
         }
 
         [Fact]
-        public void BuildMethods_ShouldThrow_When_MoreThanOneParameterPassed()
+        public void BuildMethods_ShouldThrow_When_MoreThanOneArgumentPassed()
         {
             dynamic builder = new FluentBuilder<SomeClass>();
 
             //TODO: custom exception
-            Should.Throw<RuntimeBinderException>(() =>
+            Should.Throw<InvalidArgumentNumberException>(() =>
             {
                 builder.WithSomeNumber(1, 2);
             });
@@ -87,9 +96,9 @@ namespace FluentBuilder.Tests
             dynamic builder = new FluentBuilder<SomeClass>();
 
             //TODO: custom exception
-            Should.Throw<RuntimeBinderException>(() =>
+            Should.Throw<InvalidArgumentTypeException>(() =>
             {
-                builder.WithSomeNumber("String instead of number");
+                builder.WithSomeNumber("No escape from reality");
             });
         }
 
