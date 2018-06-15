@@ -32,6 +32,15 @@ namespace FluentBuilder
 
             if (property == null) return false;
 
+            if (args.Count() != 1) return false;
+
+            var value = args.First();
+            var valueType = value.GetType();
+            var propertyType = property.PropertyType;
+
+            if (!valueType.IsAssignableFrom(propertyType)) return false;
+            
+
             return true;
         }
     }

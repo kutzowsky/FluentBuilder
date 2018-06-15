@@ -29,8 +29,8 @@ namespace FluentBuilder.Tests
 
             Should.NotThrow(() =>
             {
-                builder.WithSomeNumber();
-                builder.WithSomeString();
+                builder.WithSomeNumber(1);
+                builder.WithSomeString("Hello I'm a string");
             });
         }
 
@@ -42,8 +42,8 @@ namespace FluentBuilder.Tests
             //TODO: custom exception
             Should.Throw<RuntimeBinderException>(() =>
             {
-                builder.SomeNumber();
-                builder.SomeStrangemethod();
+                builder.SomeNumber(1);
+                builder.SomeStrangemethod("???");
             });
         }
 
@@ -52,9 +52,45 @@ namespace FluentBuilder.Tests
         {
             var builder = new FluentBuilder<SomeClass>();
 
-            FluentBuilder<SomeClass> builderAfterMethodCall = ((dynamic) builder).WithSomeNumber();
+            FluentBuilder<SomeClass> builderAfterMethodCall = ((dynamic) builder).WithSomeNumber(1);
 
             builderAfterMethodCall.ShouldBeSameAs(builder);
+        }
+
+        [Fact]
+        public void BuildMethods_ShouldThrow_When_NoParametersPassed()
+        {
+            dynamic builder = new FluentBuilder<SomeClass>();
+
+            //TODO: custom exception
+            Should.Throw<RuntimeBinderException>(() =>
+            {
+                builder.WithSomeNumber();
+            });
+        }
+
+        [Fact]
+        public void BuildMethods_ShouldThrow_When_MoreThanOneParameterPassed()
+        {
+            dynamic builder = new FluentBuilder<SomeClass>();
+
+            //TODO: custom exception
+            Should.Throw<RuntimeBinderException>(() =>
+            {
+                builder.WithSomeNumber(1, 2);
+            });
+        }
+
+        [Fact]
+        public void BuildMethods_ShouldThrow_When_ArgumentIsDifferrentTypeThanTheSourceObjectProperty()
+        {
+            dynamic builder = new FluentBuilder<SomeClass>();
+
+            //TODO: custom exception
+            Should.Throw<RuntimeBinderException>(() =>
+            {
+                builder.WithSomeNumber("String instead of number");
+            });
         }
     }
 }
