@@ -1,4 +1,6 @@
 ﻿using FluentBuilder.Exceptions;
+using FluentBuilder.Extensions;
+using System;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -65,10 +67,19 @@ namespace FluentBuilder
 
         private void CheckArgumentType(object value, PropertyInfo property)
         {
-            var valueType = value.GetType();
             var propertyType = property.PropertyType;
 
-            if (!valueType.IsAssignableFrom(propertyType)) throw new InvalidArgumentTypeException();
+            if (value == null && !propertyType.IsPrimitive) return;
+
+            if (propertyType.IsNullable())
+            {
+                var propertyUnderlyingType = Nullable.GetUnderlyingType(propertyType);
+                if (!value.CanChangeTypeTo(propertyUnderlyingType)) throw new InvalidArgumentTypeException();
+            }
+            else
+            {
+                if (!value.CanChangeTypeTo(propertyType)) throw new InvalidArgumentTypeException();
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ using Xunit;
 
 namespace FluentBuilder.Tests
 {
-    public class BasicTests
+    public class BasicFunctionalityTests
     {
         class SomeClass
         {
