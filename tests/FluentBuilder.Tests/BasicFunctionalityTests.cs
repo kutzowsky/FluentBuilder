@@ -71,7 +71,6 @@ namespace FluentBuilder.Tests
         {
             dynamic builder = new FluentBuilder<SomeClass>();
 
-            //TODO: custom exception
             Should.Throw<InvalidArgumentNumberException>(() =>
             {
                 builder.WithSomeNumber();
@@ -83,7 +82,6 @@ namespace FluentBuilder.Tests
         {
             dynamic builder = new FluentBuilder<SomeClass>();
 
-            //TODO: custom exception
             Should.Throw<InvalidArgumentNumberException>(() =>
             {
                 builder.WithSomeNumber(1, 2);
@@ -95,7 +93,6 @@ namespace FluentBuilder.Tests
         {
             dynamic builder = new FluentBuilder<SomeClass>();
 
-            //TODO: custom exception
             Should.Throw<InvalidArgumentTypeException>(() =>
             {
                 builder.WithSomeNumber("No escape from reality");
