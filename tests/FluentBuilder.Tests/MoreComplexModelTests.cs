@@ -8,7 +8,7 @@ namespace FluentBuilder.Tests
     public class MoreComplexModelTests
     {
         [Theory, AutoData]
-        public void Test(PersonExtendedInfo sourcePersonInfo)
+        public void BuilderShould_ProperlyBuildMoreComplicatedObjects(PersonExtendedInfo sourcePersonInfo)
         {
             dynamic personInfoBuilder = new FluentBuilder<PersonExtendedInfo>();
 
