@@ -34,7 +34,14 @@ namespace FluentBuilder
             var value = GetValueToSetFrom(args);
             CheckArgumentType(value, property);
 
-            property.SetValue(builtObject, value);
+            try
+            {
+                property.SetValue(builtObject, value);
+            }
+            catch (TargetInvocationException exc) 
+            {
+                throw exc.InnerException;    //to throw exception from setter which seems to be more natural result           
+            }
             
             result = this;
             return true;

@@ -1,6 +1,7 @@
 ﻿using AutoFixture.Xunit2;
 using FluentBuilder.Tests.TestModels;
 using Shouldly;
+using System;
 using Xunit;
 
 namespace FluentBuilder.Tests
@@ -8,7 +9,7 @@ namespace FluentBuilder.Tests
     public class MoreComplexModelTests
     {
         [Theory, AutoData]
-        public void BuilderShould_ProperlyBuildMoreComplicatedObjects(PersonExtendedInfo sourcePersonInfo)
+        public void Builder_Should_ProperlyBuildMoreComplicatedObjects(PersonExtendedInfo sourcePersonInfo)
         {
             dynamic personInfoBuilder = new FluentBuilder<PersonExtendedInfo>();
 
@@ -34,6 +35,30 @@ namespace FluentBuilder.Tests
             builtPersonInfo.Name.ShouldBe(sourcePersonInfo.Name);
             builtPersonInfo.Surname.ShouldBe(sourcePersonInfo.Surname);
             builtPersonInfo.Salary.ShouldBe(sourcePersonInfo.Salary);
+        }
+
+        [Fact]
+        public void Builder_Should_UsePropertySetters()
+        {
+            dynamic personInfoBuilder = new FluentBuilder<PersonExtendedInfo>();
+
+            Should.Throw<ArgumentOutOfRangeException>(() =>
+            {
+                personInfoBuilder.WithSalary(-1000m);
+            });
+        }
+
+        [Fact]
+        public void Builder_Should_CanIntoEnums()
+        {
+            var expectedArea = Areas.Suburban;
+            dynamic addressBuilder = new FluentBuilder<Address>();
+
+            addressBuilder.WithArea(expectedArea);
+
+            Address address = addressBuilder.Get();
+
+            address.Area.ShouldBe(Areas.Suburban);
         }
     }
 }
