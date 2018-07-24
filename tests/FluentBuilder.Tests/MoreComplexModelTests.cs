@@ -60,5 +60,30 @@ namespace FluentBuilder.Tests
 
             address.Area.ShouldBe(Areas.Suburban);
         }
+
+        [Theory, AutoData]
+        public void Builder_Should_BeAbleToHandleGenerics(int sourceNumber, SomeClass sourceSomeClass, Person sourcePerson)
+        {
+            dynamic genericClassBuilder = new FluentBuilder<SoMuchGenericClass<int, SomeClass, Person>>();
+
+            genericClassBuilder.WithFirstProperty(sourceNumber).WithSecondProperty(sourceSomeClass).WithThirdProperty(sourcePerson);
+
+            SoMuchGenericClass<int, SomeClass, Person> genericClass = genericClassBuilder.Get();
+
+            genericClass.FirstProperty.ShouldBe(sourceNumber);
+            genericClass.SecondProperty.ShouldBe(sourceSomeClass);
+            genericClass.ThirdProperty.ShouldBe(sourcePerson);
+        }
+
+        [Fact]
+        public void Builder_Should_NotBeAbleToSetValueOfPropertyWithoutSetter()
+        {
+            dynamic personExtendedInfoBuilder = new FluentBuilder<PersonExtendedInfo>(); 
+
+            Should.Throw<ArgumentException>(() =>
+            {
+                personExtendedInfoBuilder.WithId(Guid.NewGuid());
+            });
+        }
     }
 }

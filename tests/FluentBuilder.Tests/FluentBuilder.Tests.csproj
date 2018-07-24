@@ -80,6 +80,7 @@
     <Compile Include="TestModels\Person.cs" />
     <Compile Include="TestModels\PersonExtendedInfo.cs" />
     <Compile Include="TestModels\SomeClass.cs" />
+    <Compile Include="TestModels\SoMuchGenericClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
