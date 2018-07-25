@@ -99,5 +99,15 @@ namespace FluentBuilder.Tests
             someClassInstance.SomeNumber.ShouldBe(expectedNumber);
             someClassInstance.SomeString.ShouldBe(expectedString);
         }
+
+        [Fact]
+        public void Builder_Should_AcceptOnlyMethodsWithValidPrefixes()
+        {
+            Should.NotThrow(() =>
+            {
+                _builder.WithSomeNumber(1);
+                _builder.AndSomeString("He's just a poor string from a poor family");
+            });
+        }
     }
 }

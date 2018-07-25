@@ -1,6 +1,7 @@
 ﻿using FluentBuilder.Exceptions;
 using FluentBuilder.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -11,6 +12,7 @@ namespace FluentBuilder
     {
         private T builtObject;
         readonly PropertyInfo[] builtObjectProperties;
+        private static List<string> allowedMethodPrefixes = new List<string>{"With", "And"};
 
         public FluentBuilder()
         {
@@ -26,9 +28,9 @@ namespace FluentBuilder
         public override bool TryInvokeMember(InvokeMemberBinder binder, object[] args, out object result)
         {
             var methodName = binder.Name;
-            CheckPrefixOf(methodName);
+            var prefix = GetPrefixFrom(methodName);
 
-            var propertyName = RemovePrefixFrom(methodName);
+            var propertyName = methodName.RemovePrefix(prefix);
             var property = FindPropertyWith(propertyName);
 
             var value = GetValueToSetFrom(args);
@@ -47,14 +49,14 @@ namespace FluentBuilder
             return true;
         }
 
-        private void CheckPrefixOf(string methodName)
+        private string  GetPrefixFrom(string methodName)
         {
-            if (!methodName.StartsWith("With")) throw new InvalidMethodPrefixException();
-        }
+            foreach (var prefix in allowedMethodPrefixes)
+            {
+                if (methodName.StartsWith(prefix)) return prefix;
+            }
 
-        private string RemovePrefixFrom(string methodName)
-        {
-            return methodName.Remove(0, 4);
+            throw new InvalidMethodPrefixException();
         }
 
         private PropertyInfo FindPropertyWith(string propertyName)

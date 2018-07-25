@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="BasicFunctionalityTests.cs" />
     <Compile Include="Extensions\ObjectExtensionsTests.cs" />
+    <Compile Include="Extensions\StringExtensionsTests.cs" />
     <Compile Include="Extensions\TypeExtensionsTests.cs" />
     <Compile Include="MoreComplexModelTests.cs" />
     <Compile Include="NulllValuesTests.cs" />
